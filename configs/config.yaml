@@ -1,0 +1,104 @@
+# ============================================================
+# brain_tumor_vlm/configs/config.yaml
+# Master configuration for Text-Guided Brain Tumor Segmentation
+# ============================================================
+
+# ---- Paths --------------------------------------------------
+paths:
+  project_root: "/Users/lohith/Documents/projects/Deep_Learning /brain_tumor_vlm"
+  data_root:    "/Users/lohith/Documents/projects/Deep_Learning" 
+  flair_root:   "/Users/lohith/Documents/projects/Deep_Learning /FLAIR_BRATS2020"
+  text_root:    "/Users/lohith/Documents/projects/Deep_Learning /TextBRats/TextBraTSData"
+  checkpoints:  "/Users/lohith/Documents/projects/Deep_Learning /brain_tumor_vlm/checkpoints"
+  logs:         "/Users/lohith/Documents/projects/Deep_Learning /brain_tumor_vlm/logs"
+  results:      "/Users/lohith/Documents/projects/Deep_Learning /brain_tumor_vlm/results"
+
+# ---- Dataset ------------------------------------------------
+dataset:
+  image_size: 128             # H × W of each 2D slice
+  num_slices: 128             # depth axis length per volume
+  slice_axis: 2               # axis along which to extract 2D slices
+  num_classes: 4              # 0=BG, 1=NCR, 2=ED, 3=ET
+  binary_mask: true           # collapse to binary (tumor vs BG)
+  use_precomputed_text: true  # use .npy embeddings vs re-encoding with BioClinicalBERT
+  max_text_length: 128        # tokenizer max length
+  filter_empty_slices: true   # skip slices with no tumor
+  empty_ratio_threshold: 0.3  # keep 30% of empty slices (reduces epoch size drastically)
+
+# ---- Dataloader --------------------------------------------
+dataloader:
+  train_batch_size: 4
+  val_batch_size: 4
+  num_workers: 0              # 0 = main process (MacBook safe)
+  pin_memory: false
+  prefetch_factor: null
+
+# ---- Model -------------------------------------------------
+model:
+  unet_base_channels: 32
+  unet_depth: 4
+  text_embed_dim: 768         # BioClinicalBERT hidden size
+  image_embed_dim: 512        # CLIP ViT-B/32 output
+  fusion_dim: 256             # shared projection dim
+  dropout: 0.1
+  clip_model: "openai/clip-vit-base-patch32"
+  bert_model: "emilyalsentzer/Bio_ClinicalBERT"
+  freeze_clip: true
+  unfreeze_clip_blocks: 1     # REDUCED: only final CLIP block (was 2 → collapsed training)
+  freeze_bert: true
+  cross_attn_heads: 8
+  cross_attn_layers: 2
+
+# ---- Training ----------------------------------------------
+training:
+  seed: 42
+  num_epochs: 20
+  optimizer: "adamw"
+  lr: 3e-5                    # REDUCED from 1e-4 — transformer layers need lower base LR
+  weight_decay: 1e-5
+  # Differential LR scales (applied as multiplier on base lr)
+  clip_lr_scale: 0.033        # CLIP block:     3e-5 * 0.033 ≈ 1e-6
+  cross_attn_lr_scale: 0.167  # Cross-attn:     3e-5 * 0.167 ≈ 5e-6
+  film_lr_scale: 0.333        # FiLM layers:    3e-5 * 0.333 ≈ 1e-5
+  lr_scheduler: "cosine"
+  warmup_epochs: 3            # INCREASED from 2 — transformer layers need longer warmup
+  gradient_accumulation_steps: 2
+  mixed_precision: false
+  clip_grad_norm: 0.5         # REDUCED from 1.0 — stricter clipping for transformer stability
+  early_stopping_patience: 6
+  checkpoint_every: 2
+  val_every: 1
+
+# ---- Loss --------------------------------------------------
+loss:
+  type: "tversky_focal"
+  dice_weight: 0.7
+  bce_weight: 0.3
+  focal_gamma: 2.0
+  focal_alpha: 0.25
+  tversky_alpha: 0.3          # FP weight — LOW to allow aggressive tumor prediction
+  tversky_beta: 0.7           # FN weight — HIGH to penalize missed tumors (recall-oriented)
+  tversky_gamma: 0.75
+  smooth: 1e-6
+  attn_entropy_weight: 0.001  # REDUCED from 0.01 — gentler attention regularization
+
+# ---- Evaluation --------------------------------------------
+evaluation:
+  metrics: ["dice", "iou", "precision", "recall", "hausdorff"]
+  hausdorff_percentile: 95
+  threshold: 0.5
+
+# ---- Ablation ----------------------------------------------
+ablation:
+  models: ["model1_image_only", "model2_concat_fusion", "model3_cross_attention"]
+  checkpoint_names:
+    model1: "model1_best.pth"
+    model2: "model2_best.pth"
+    model3: "model3_best.pth"
+
+# ---- Visualization -----------------------------------------
+visualization:
+  num_samples: 8
+  tsne_perplexity: 30
+  tsne_n_iter: 1000
+  gradcam_layer: "encoder.down4"

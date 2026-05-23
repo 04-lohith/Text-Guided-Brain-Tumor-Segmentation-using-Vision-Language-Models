@@ -1,0 +1,75 @@
+# ── Python ────────────────────────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# ── Virtual environments ───────────────────────────────────────────────────────
+.env
+.venv
+env/
+venv/
+ENV/
+
+# ── Jupyter ────────────────────────────────────────────────────────────────────
+.ipynb_checkpoints/
+*.ipynb
+
+# ── Model checkpoints (large files) ───────────────────────────────────────────
+checkpoints/
+*.pth
+*.pt
+*.ckpt
+*.bin
+*.safetensors
+
+# ── Dataset / raw data (too large for GitHub) ─────────────────────────────────
+data/raw/
+*.npy
+*.nii
+*.nii.gz
+*.h5
+*.hdf5
+
+# ── Logs ───────────────────────────────────────────────────────────────────────
+logs/
+*.log
+runs/
+session_log.txt
+
+# ── Results — keep plots, ignore large CSVs if needed ─────────────────────────
+results/inference/
+
+# ── macOS system files ─────────────────────────────────────────────────────────
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# ── IDE / Editor ───────────────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ── LaTeX build artefacts ──────────────────────────────────────────────────────
+report/*.aux
+report/*.log
+report/*.out
+report/*.toc
+report/*.synctex.gz
+report/*.fls
+report/*.fdb_latexmk
+report/*.pdf
+
+# ── Misc ───────────────────────────────────────────────────────────────────────
+.cache/
+*.tmp
+terminal.txt

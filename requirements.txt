@@ -1,0 +1,50 @@
+# ============================================================
+# Brain Tumor VLM - requirements.txt
+# Tested on macOS (Apple Silicon + Intel) with Python 3.10
+# Install inside the brain_tumor_vlm conda environment
+# ============================================================
+
+# Core Deep Learning
+torch>=2.1.0
+torchvision>=0.16.0
+
+# Hugging Face Ecosystem
+transformers>=4.37.0
+tokenizers>=0.15.0
+huggingface-hub>=0.20.0
+
+# CLIP (OpenAI)
+git+https://github.com/openai/CLIP.git
+
+# Medical Imaging
+monai>=1.3.0
+
+# Scientific Computing
+numpy>=1.24.0
+scipy>=1.11.0
+
+# Image Processing
+Pillow>=10.0.0
+opencv-python-headless>=4.8.0
+
+# Data & Config
+PyYAML>=6.0
+pandas>=2.0.0
+
+# Visualization
+matplotlib>=3.7.0
+seaborn>=0.12.0
+scikit-learn>=1.3.0
+
+# Metrics
+scikit-image>=0.21.0
+
+# Logging
+tqdm>=4.66.0
+tensorboard>=2.14.0
+
+# Reproducibility & Utilities
+einops>=0.7.0
+
+# Optional: Accelerate for mixed precision helpers
+accelerate>=0.25.0

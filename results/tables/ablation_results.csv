@@ -1,0 +1,4 @@
+Model,Dice,IoU,Precision,Recall,HD95 (mm)
+Model 1 Image-Only U-Net,0.6964,0.6494,0.7104,0.9065,10.13
+Model 2 Concat Fusion,0.7316,0.6867,0.7722,0.8863,9.70
+Model 3 Cross-Attn Fusion,0.8283,0.7856,0.8971,0.8743,8.15
