@@ -1,6 +1,6 @@
 # Text-Guided Brain Tumor Segmentation using Vision-Language Models
 
-> **Research-grade multimodal deep learning framework** — integrating FLAIR MRI with radiology text reports for pixel-wise brain tumor segmentation via CLIP + BioClinicalBERT + U-Net with cross-attention fusion.
+Integrating FLAIR MRI with radiology text reports for pixel-wise brain tumor segmentation via CLIP + BioClinicalBERT + U-Net with cross-attention fusion.
 
 ---
 
